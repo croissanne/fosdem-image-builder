@@ -7,6 +7,10 @@
     color: darkblue;
 }
 
+.reveal pre code.language-bash {
+    color: darkblue;
+}
+
 .reveal pre code.bash {
     color:darkblue;
 }
