@@ -15,10 +15,10 @@ Note:
 
 Hello everyone,
 
-So I will talk a little bit about image builder, also known as osbuild.
+So I will talk a little bit about image builder.
 
-I'll talk about how it works, how the stack fits together, but before that I'll try to explain why
-it exists.
+I'll talk about how it works, how the stack fits together, show off some of the things it can do,
+but before that I'll try to explain why it exists.
 
 <!--v-->
 
@@ -32,7 +32,8 @@ it exists.
 
 Note:
 
-So image builder builds bootable operating system images, base images.
+So image builder builds bootable operating system images, base images. It runs on your local
+machine, or as a hosted service.
 
 It's not that hard of a problem, you just put a few bits in the right place, most of the hard work
 is done by the package maintainers.
@@ -41,13 +42,13 @@ But at a certain scale constistency and reliability are important. You want to b
 part of pipelines obviously. So you need infrastructure, and conceptually you need a clear way to
 define images etc...
 
-It's not that hard until you need one for different purposes, different targets, different
-architectures, AWS, GCP, Azure, local virtualization, installers. And you don't want to have these
-differ too much from one another, so a structured way to define images comes in handy.
+Because you need to build images for different purposes, different targets, different architectures,
+AWS, GCP, Azure, local virtualization, installers. And you don't want to have these differ too much
+from one another, you want to reason and produce them in roughly the same manner.
 
 Also to avoid vendor lock-in. Now cloud environments often offer their own workflow to build images
-for their environment or just offer their own images fullstop, but that might result in vendor
-lock-in. So a system that's easy to extend and add another image to, is useful.
+for their environment or just offer their own images fullstop, but now you're tied to that
+provider. So offering users an alternative is good.
 
 Image based workloads are becoming the norm, everybody uses containers. We need to make VM images as
 easy to make and use as container images.
@@ -79,37 +80,18 @@ each component does and why it's there.
 
 <small>let's take a look at a manifest...</small>
 
-<!-- <table style="font-size: 0.5em"> -->
-<!--     <tr> -->
-<!--         <td rowspan="3"><b>OSBuild</b></td> -->
-<!--         <td rowspan="3">Composer</td> -->
-<!--         <td>Weldr client (cli)</td> -->
-<!--     </tr> -->
-<!--     <tr> -->
-<!--         <td>Cockpit composer plugin</td> -->
-<!--     </tr> -->
-<!--     <tr> -->
-<!--         <td>Hosted service</td> -->
-<!--     </tr> -->
-<!-- </table> -->
-
 Note:
-
-todo little architecture diagram
 
 So at the very bottom of the stack we have OSBuild, which is the low level tool that executes a
 manifest. The manifest describes what exactly goes into the image, and how to package it.
 
-TODO auditable reproducibility!! not meant to be written by hand
-The manifest is an important component, it makes these images auditable, as it describes the exact
-packages that go into the image and what (config) bits should be changed, and how it was packaged.
+The manifest makes images auditable and reproducible, since you have the exact steps that were used
+to build the image described in it.
 
-It is mostly distribution agnostic. But supports installing rpm and pacman packages.
+It is mostly distribution agnostic, so it doesn't have a notion of what fedora or centos is. But
+supports installing rpm and pacman packages.
 
-- starts from a 'pristine' tree and builds it up piece by piece,
-
-
-<!-- | OSBuild | Composer | Composer-CLI -->
+OSBuild starts from a 'pristine' tree and builds it up piece by piece,
 
 <!--v-->
 
@@ -150,10 +132,7 @@ Note:
 
 Then we get to composer, composer is really the part that brings it all together. It takes user
 input in a format I'll get into shortly, package repositories from either the user or the system,
-and the aforementioned image definitons to generate the manifest we discussed earlier.
-
-It also is the component that depsolves, so we start from the base package set, user-requested
-packages and then get the dependency tree which is then put into the manifest.
+and the aforementioned image definitons to generate the manifest which will be passed to osbuild.
 
 Also orchestrates all the builds, it manages a job queue and workers. Important to run this as a
 hosted service which I'll get into after discussing this user input.
@@ -211,7 +190,7 @@ end-users.
 
 <!--v-->
 
-### CLI
+### Composer-cli
 
 A blueprint as input:
 ```toml
@@ -249,8 +228,11 @@ key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB1jFl4p6FTBixHT6wOk6X8nj/Z7eoPNQE/M
 
 Note:
 
-There's the composer-cli which takes a blueprint as input. And here's a blueprint with more
-customizations.
+First we have the tool meant to run on your local machine. Here's composer-cli which takes a
+blueprint as input. And as you might have noticed, we not longer specify the architecture or
+distribution or repositories, those are all inferred from the host. What's left is just the
+customisations, in this case it creates and enabled a systemd service which prepares a 2nd disk on
+boot.
 
 <!--v-->
 
@@ -299,9 +281,9 @@ Note:
 
 Note:
 
-Currently supported, soon we'll added
+Currently supported, soon we'll add...
 
-For now only x86
+For now only x86 arch, but aarch64 can and will be added to production.
 
 <!--v-->
 
@@ -321,6 +303,15 @@ Demo:
     }
   ],
   "customizations": {
+    "custom_repositories": [
+      {
+        "id": "demo-copr",
+        "baseurl": ["https://download.copr.fedorainfracloud.org/results/gundersanne/demo-rpm/fedora-$releasever-$basearch/"],
+        "check_gpg": false,
+        "check_repo_gpg": false,
+        "rhsm": false
+      }
+    ],
     "packages": [
       "cockpit",
       "cockpit-networkmanager",
@@ -343,16 +334,7 @@ Demo:
       "services": {
         "enabled": ["cockpit"]
       }
-    },
-    "custom_repositories": [
-      {
-        "id": "demo-copr",
-        "baseurl": ["https://download.copr.fedorainfracloud.org/results/gundersanne/demo-rpm/fedora-$releasever-$basearch/"],
-        "check_gpg": false,
-        "check_repo_gpg": false,
-        "rhsm": false
-      }
-    ]
+    }
   }
 }
 ```
