@@ -290,7 +290,7 @@ Note:
 
 ### Fedora hosted service!
 
-https://console.stg.fedorainfracloud.org
+<a href="https://console.stg.fedorainfracloud.org" target="_blank">https://console.stg.fedorainfracloud.org</a>
 
 
 | supported ✅ | soon™ |
