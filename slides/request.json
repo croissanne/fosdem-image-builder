@@ -17,14 +17,6 @@
       "firewalld",
       "npm"
     ],
-    "files": [{
-      "path": "/root/startup.sh",
-      "data": "npm install -g reveal-md\ndnf install -y demo-slides\ncd /root\nreveal-md --theme solarized --host 0.0.0.0 ./slides.md",
-      "mode": "0755"
-    },{
-      "path": "/etc/systemd/system/reveal-md.service",
-      "data": "[Unit]\nAfter=network.target\n[Service]\nType=oneshot\nExecStart=bash /root/startup.sh\n[Install]\nWantedBy=default.target\n"
-    }],
     "services": {
       "enabled": ["cockpit.socket", "reveal-md"]
     },
@@ -42,6 +34,14 @@
         "check_repo_gpg": false,
         "rhsm": false
       }
-    ]
+    ],
+    "files": [{
+      "path": "/root/startup.sh",
+      "data": "npm install -g reveal-md\ndnf install -y demo-slides\ncd /root\nreveal-md --theme solarized --host 0.0.0.0 ./slides.md",
+      "mode": "0755"
+    },{
+      "path": "/etc/systemd/system/reveal-md.service",
+      "data": "[Unit]\nAfter=network.target\n[Service]\nType=oneshot\nExecStart=bash /root/startup.sh\n[Install]\nWantedBy=default.target\n"
+    }],
   }
 }
