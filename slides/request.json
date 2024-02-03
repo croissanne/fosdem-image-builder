@@ -42,6 +42,6 @@
     },{
       "path": "/etc/systemd/system/reveal-md.service",
       "data": "[Unit]\nAfter=network.target\n[Service]\nType=oneshot\nExecStart=bash /root/startup.sh\n[Install]\nWantedBy=default.target\n"
-    }],
+    }]
   }
 }
