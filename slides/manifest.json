@@ -917,12 +917,6 @@
           }
         },
         {
-          "type": "org.osbuild.fix-bls",
-          "options": {
-            "prefix": ""
-          }
-        },
-        {
           "type": "org.osbuild.locale",
           "options": {
             "language": "en_US"
@@ -994,12 +988,6 @@
               "cloud-init-local.service"
             ],
             "default_target": "multi-user.target"
-          }
-        },
-        {
-          "type": "org.osbuild.test",
-          "options": {
-            "script": "/usr/bin/systemctl is-system-running --wait"
           }
         },
         {
