@@ -26,7 +26,7 @@ it exists.
 
 - Building bootable operating system images isn't **that** hard, but:
   - how to do it consistently and reliably
-  - how to do it for different target platforms (in a nice way)
+  - how to do it for different target environments (in a nice way)
 
 - Image based workloads are becoming the norm
 
@@ -51,6 +51,19 @@ lock-in. So a system that's easy to extend and add another image to, is useful.
 
 Image based workloads are becoming the norm, everybody uses containers. We need to make VM images as
 easy to make and use as container images.
+
+<!--v-->
+
+## So, Image builder
+
+![](stack.png)
+
+Note:
+
+so image builder was created to address these problems.
+
+This is the stack, and I want to walk you through the stack, just to quickly give an idea of what
+each component does and why it's there.
 
 <!--s-->
 
@@ -87,6 +100,7 @@ todo little architecture diagram
 So at the very bottom of the stack we have OSBuild, which is the low level tool that executes a
 manifest. The manifest describes what exactly goes into the image, and how to package it.
 
+TODO auditable reproducibility!! not meant to be written by hand
 The manifest is an important component, it makes these images auditable, as it describes the exact
 packages that go into the image and what (config) bits should be changed, and how it was packaged.
 
@@ -117,7 +131,7 @@ OSBuild doesn't know what goes into a fedora qcow2, it just executes the steps i
 - Defines what makes up a specific distribution:
   - Base package sets
   - Default configurations
-- Defines how architectures / platforms differ
+- Defines how architectures differ
 - Defines how the differences between target environments
 
 Note: So we have the images base which is contains all the information needed to describe an image
@@ -272,13 +286,22 @@ Note: This is how you would invoke it, the repositories and distribution are inf
 
 Note:
 
-Now we also run this as a hosted service where we operate it, and users can just curl it.
-
 <!--v-->
 
 ### Fedora hosted service!
 
-https://console.stg.fedorainfracloud.org/api/image-builder/v1/
+https://console.stg.fedorainfracloud.org
+
+
+| supported ✅ | soon™ |
+| --- | --- |
+|<table><tr><td>KVM (qcow2)</td></tr><tr><td>vSphere (ova or vmdk)</td></tr><tr><td>AWS (ami)</td></tr></table>| <table><tr><td>installer (ISO)</td></tr><tr><td>Google cloud</td></tr><tr><td>live-installer</td></tr><tr><td>Azure</td></tr><tr><td>WSL (tar)</td></tr><tr><td>WSL (tar)</td></tr><tr><td>container (tar)</td></tr><tr><td>IOT</td></tr></table>|
+
+Note:
+
+Currently supported, soon we'll added
+
+For now only x86
 
 <!--v-->
 
@@ -384,7 +407,7 @@ qemu-system-x86_64 \
 <br/>
 
 - <a href="https://localhost:9093" target="_blank">cockpit</a>
-- <a href="http://localhost:1949/slides.md" target="_blank">find us at…</a>
+- <a href="http://localhost:1949/slides.md" target="_blank">http://localhost:1949/slides.md</a>
 
 Note:
 Service
