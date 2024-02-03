@@ -40,10 +40,11 @@ is done by the package maintainers.
 
 But at a certain scale constistency and reliability are important.
 
-Because you need to build images for different purposes, different targets, different architectures,
-AWS, GCP, Azure, local virtualization, installers. And you don't want to have these differ too much
-from one another, you want to reason and produce them in roughly the same manner. You want to
-produce and reproduce them often without manual interference, so you need infrastructure.
+Because you need to build images for different purposes, different architectures, different target
+environments like AWS, GCP, Azure, local virtualization, bare metal. And you don't want to have
+these differ too much from one another, you want to reason and produce them in roughly the same
+manner. You want to produce and reproduce them often without manual interference, so you need
+infrastructure.
 
 Also to avoid vendor lock-in. Now cloud environments often offer their own workflow to build images
 for their environment or just offer their own images fullstop, but now you're tied to that
