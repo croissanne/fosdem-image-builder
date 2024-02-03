@@ -14,3 +14,7 @@
 .reveal pre code.bash {
     color:darkblue;
 }
+
+.reveal pre code span.hljs-section {
+    color: darkmagenta;
+}
