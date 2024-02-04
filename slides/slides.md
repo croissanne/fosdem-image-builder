@@ -116,9 +116,14 @@ OSBuild doesn't know what goes into a fedora qcow2, it just executes the steps i
 - Defines how architectures differ
 - Defines how the differences between target environments
 
-Note: So we have the images base which is contains all the information needed to describe an image
+Note:
+
+But like I said OSBuild doesn't know what makes up a specific distribution.
+
+So we have the image definitions which is contains all the information needed to describe an image
 of a specific distribution of a specific architecture for a specific target environment. It
-integrates tightly with Composer,
+describes things like the base package sets, default configurations, how architectures differ
+etc... It integrates tightly with Composer,
 
 <!--s-->
 
@@ -230,9 +235,9 @@ Note:
 
 First we have the tool meant to run on your local machine. Here's composer-cli which takes a
 blueprint as input. And as you might have noticed, we not longer specify the architecture or
-distribution or repositories, those are all inferred from the host. What's left is just the
-customisations, in this case it creates and enabled a systemd service which prepares a 2nd disk on
-boot.
+distribution or repositories, because for composer-cli those are all inferred from the host. What's
+left is just the customisations, which can be quite powerful, in this case it creates and enabled a
+systemd service which prepares a 2nd disk on boot.
 
 <!--v-->
 
@@ -280,6 +285,9 @@ Note:
 |<table><tr><td>KVM (qcow2)</td></tr><tr><td>vSphere (ova or vmdk)</td></tr><tr><td>AWS (ami)</td></tr></table>| <table><tr><td>installer (ISO)</td></tr><tr><td>Google cloud</td></tr><tr><td>live-installer</td></tr><tr><td>Azure</td></tr><tr><td>WSL (tar)</td></tr><tr><td>container (tar)</td></tr><tr><td>IOT</td></tr></table>|
 
 Note:
+
+We've been thinking about how to run open source services for a while. So we wanted to try and offer
+the services we build and run for a particular hat company to the wider community.
 
 Currently supported, soon we'll add...
 
